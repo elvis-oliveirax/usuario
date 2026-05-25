@@ -1,6 +1,5 @@
 package com.javaeo.usuario.business.dto;
 
-import jakarta.persistence.Column;
 import lombok.*;
 
 @Getter
