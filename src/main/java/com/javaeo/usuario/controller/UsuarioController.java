@@ -6,7 +6,6 @@ import com.javaeo.usuario.business.dto.EnderecoDTO;
 import com.javaeo.usuario.business.dto.TelefoneDTO;
 import com.javaeo.usuario.business.dto.UsuarioDTO;
 import com.javaeo.usuario.infrastructure.clients.ViaCepDTO;
-import com.javaeo.usuario.infrastructure.security.JwtUtil;
 import com.javaeo.usuario.infrastructure.security.SecurityConfig;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -14,9 +13,6 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -27,12 +23,10 @@ import org.springframework.web.bind.annotation.*;
 public class UsuarioController {
 
 	private  final UsuarioService usuarioService;
-	private final AuthenticationManager authenticationManager;
-	private final JwtUtil jwtUtil;
 	private final ViaCepService viaCepService;
 
 	@PostMapping
-	@Operation(summary = "Salvar Usuário", description = "Cria um novo usuário")
+	@Operation(summary = "Salva Usuário", description = "Cria um novo usuário")
 	@ApiResponse(responseCode = "200", description = "Usuário salvo com sucesso")
 	@ApiResponse(responseCode = "409", description = "Usuário já cadastrado")
 	@ApiResponse(responseCode = "500", description = "Erro de servidor")
@@ -45,12 +39,8 @@ public class UsuarioController {
 	@ApiResponse(responseCode = "200", description = "Usuário logado com sucesso")
 	@ApiResponse(responseCode = "401", description = "Credenciais inválidas")
 	@ApiResponse(responseCode = "500", description = "Erro de servidor")
-	public String login(@RequestBody UsuarioDTO usuarioDTO){
-		Authentication authentication = authenticationManager.authenticate(
-				new UsernamePasswordAuthenticationToken(usuarioDTO.getEmail(),
-						usuarioDTO.getSenha())
-		);
-		return "Bearer " + jwtUtil.generateToken(authentication.getName());
+	public ResponseEntity<String> login(@RequestBody UsuarioDTO usuarioDTO){
+		return ResponseEntity.ok(usuarioService.autenticarUsuario(usuarioDTO));
 	}
 
 	@GetMapping
