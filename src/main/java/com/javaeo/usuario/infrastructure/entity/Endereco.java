@@ -39,7 +39,7 @@ public class Endereco implements Serializable {
     private String cep;
 
 	@Column(name = "usuario_id")
-	private long usuarioid;
+	private long usuarioId;
 
 
 }
