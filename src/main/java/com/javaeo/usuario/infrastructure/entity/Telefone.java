@@ -27,5 +27,5 @@ public class Telefone implements Serializable {
 	private String ddd;
 
 	@Column(name = "usuario_id")
-	private long usuarioid;
+	private long usuarioId;
 }
