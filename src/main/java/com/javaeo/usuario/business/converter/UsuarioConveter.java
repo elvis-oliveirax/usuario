@@ -136,7 +136,7 @@ public class UsuarioConveter {
 				.cep(dto.getCep())
 				.complemento(dto.getComplemento())
 				.estado(dto.getEstado())
-				.usuario_id(idUsuario)
+				.usuarioId(idUsuario)
 				.build();
 	}
 
@@ -144,7 +144,7 @@ public class UsuarioConveter {
 		return Telefone.builder()
 				.numero(dto.getNumero())
 				.ddd(dto.getDdd())
-				.usuario_id(idUsuario)
+				.usuarioId(idUsuario)
 				.build();
 	}
 }

@@ -29,6 +29,10 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UsuarioService {
 
+	private static final String EMAIL_NAO_LOCALIZADO = "Email não localizado";
+	private static final String EMAIL_NAO_ENCONTRADO = "Email não encontrado";
+	private static final String ID_NAO_ENCONTRADO = "Id não encontrado";
+
 	private final UsuarioRepository usuarioRepository;
 	private final UsuarioConveter usuarioConveter;
 	private final PasswordEncoder passwordEncoder;
@@ -36,6 +40,7 @@ public class UsuarioService {
 	private final EnderecoRepository enderecoRepository;
 	private final TelefoneRepository telefoneRepository;
 	private final AuthenticationManager authenticationManager;
+
 
 	public UsuarioDTO salvaUsuario(UsuarioDTO usuarioDTO){
 		emailExiste(usuarioDTO.getEmail());
@@ -77,11 +82,11 @@ public class UsuarioService {
 			return usuarioConveter.paraUsuarioDTO(
 					usuarioRepository.findByEmail(email)
 							.orElseThrow(
-									() -> new RescoucerNotFoundException("Email não encontrado " + email)
+									() -> new RescoucerNotFoundException(EMAIL_NAO_ENCONTRADO + email)
 							)
 			);
 		}catch (RescoucerNotFoundException e){
-			throw new RescoucerNotFoundException("Email não encontrado " + email);
+			throw new RescoucerNotFoundException(EMAIL_NAO_ENCONTRADO + email);
 		}
 
 	}
@@ -100,19 +105,19 @@ public class UsuarioService {
 
 		//Busca os dados do usuário no banco de dados
 		Usuario usuarioEntity = usuarioRepository.findByEmail(email).orElseThrow(() ->
-				new RescoucerNotFoundException("Email não localizado"));
+				new RescoucerNotFoundException(EMAIL_NAO_LOCALIZADO));
 
 		//Mesclou os dados que recebemos na requisição DTo com os dados do banco de dados
 		Usuario usuario = usuarioConveter.updateUsuario(dto, usuarioEntity);
 
-		//salvou os dados do usuário e depois pegou o retorno e converteu para  UsuarioDTO
+		//salvou os dados do usuário e depois pegou o retorno e converteu para UsuarioDTO
 		return usuarioConveter.paraUsuarioDTO(usuarioRepository.save(usuario));
 	}
 
 	public EnderecoDTO atualizaEndereco(Long idEndereco, EnderecoDTO enderecoDTO){
 
 		Endereco entity = enderecoRepository.findById(idEndereco).orElseThrow(() ->
-				new RescoucerNotFoundException("Id não encontrado " + idEndereco));
+				new RescoucerNotFoundException(ID_NAO_ENCONTRADO + idEndereco));
 
 		Endereco endereco = usuarioConveter.updateEndereco(enderecoDTO,entity);
 
@@ -123,7 +128,7 @@ public class UsuarioService {
 	public TelefoneDTO atualizaTelefone(Long idTelefone, TelefoneDTO dto){
 
 		Telefone entity = telefoneRepository.findById(idTelefone).orElseThrow(()->
-				new RescoucerNotFoundException("Id não encontrado " + idTelefone));
+				new RescoucerNotFoundException(ID_NAO_ENCONTRADO + idTelefone));
 
 		Telefone telefone = usuarioConveter.updateTelefone(dto, entity);
 
@@ -133,7 +138,7 @@ public class UsuarioService {
 	public EnderecoDTO cadastraEndereco(String token, EnderecoDTO dto){
 		String email = jwtUtil.extrairEmailToken(token.substring(7));
 		Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
-				new RescoucerNotFoundException("Email não localizado"));
+				new RescoucerNotFoundException(EMAIL_NAO_LOCALIZADO));
 
 		Endereco endereco = usuarioConveter.paraEnderecoEntity(dto, usuario.getId());
 		Endereco enderecoEntity = enderecoRepository.save(endereco);
@@ -144,7 +149,7 @@ public class UsuarioService {
 	public TelefoneDTO cadastraTelefone(String token, TelefoneDTO dto) {
 		String email = jwtUtil.extrairEmailToken(token.substring(7));
 		Usuario usuario = usuarioRepository.findByEmail(email).orElseThrow(() ->
-				new RescoucerNotFoundException("Email não localizado"));
+				new RescoucerNotFoundException(EMAIL_NAO_LOCALIZADO));
 
 		Telefone telefone = usuarioConveter.paraTelefoneEntity(dto, usuario.getId());
 		return usuarioConveter.paraTelefoneDTO(

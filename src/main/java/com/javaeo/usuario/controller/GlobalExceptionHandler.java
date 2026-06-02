@@ -15,13 +15,15 @@ import java.time.LocalDateTime;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String NOT_FOUND = "Not Found";
+
     @ExceptionHandler(RescoucerNotFoundException.class)
     public ResponseEntity<ErrorResponseDTO> handleResourceNotFoundException(RescoucerNotFoundException ex,
                                                                             HttpServletRequest request) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(buildError(HttpStatus.NOT_FOUND.value(),
         ex.getMessage(),
         request.getRequestURI(),
-                "Not Found"
+                NOT_FOUND
         ));
     }
 
@@ -30,7 +32,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(buildError(HttpStatus.CONFLICT.value(),
                 ex.getMessage(),
                 request.getRequestURI(),
-                "Not Found"
+                NOT_FOUND
         ));
     }
 
@@ -39,7 +41,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(buildError(HttpStatus.UNAUTHORIZED.value(),
                 ex.getMessage(),
                 request.getRequestURI(),
-                "Not Found"
+                NOT_FOUND
         ));
     }
 
@@ -48,7 +50,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(buildError(HttpStatus.BAD_REQUEST.value(),
                 ex.getMessage(),
                 request.getRequestURI(),
-                "Not Found"
+                NOT_FOUND
         ));
 
     }

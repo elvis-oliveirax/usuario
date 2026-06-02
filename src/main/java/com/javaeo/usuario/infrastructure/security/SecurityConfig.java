@@ -24,7 +24,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
         bearerFormat = "JWT", scheme = "bearer")
 public class SecurityConfig {
 
-    public static final String SECURITY_SCHEME = "beareAuth";
+    public static final String SECURITY_SCHEME = "bearerAuth";
 
     // Instâncias de JwtUtil e UserDetailsService injetadas pelo Spring
     private final JwtUtil jwtUtil;
